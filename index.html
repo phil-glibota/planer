@@ -144,8 +144,18 @@ input:focus,select:focus{border-color:var(--ink)}
 .todos{list-style:none;margin:0;padding:0}
 .todo{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--line)}
 .todo input{width:18px;height:18px;accent-color:var(--accent);flex:none;margin:0}
-.todo span{flex:1;overflow-wrap:anywhere}
-.todo.done span{color:var(--faint);text-decoration:line-through}
+.todo > span{position:relative;flex:0 1 auto;overflow-wrap:anywhere;transition:color .3s ease}
+.todo > span + button{margin-left:auto}
+.todo > span::after{content:"";position:absolute;left:-2px;right:-2px;top:52%;height:1.6px;border-radius:1px;background:currentColor;transform:scaleX(0);transform-origin:left center}
+.todo.done > span{color:var(--faint)}
+.todo.done > span::after{transform:scaleX(1)}
+.todo.pop > span::after{animation:strike .42s cubic-bezier(.3,.7,.3,1) both}
+.todo.pop > span{animation:fade .5s ease both}
+.todo.pop input{animation:pop .38s cubic-bezier(.3,1.6,.5,1) both}
+@keyframes strike{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@keyframes fade{from{color:var(--ink)}to{color:var(--faint)}}
+@keyframes pop{0%{transform:scale(.7)}60%{transform:scale(1.18)}100%{transform:scale(1)}}
+@media (prefers-reduced-motion:reduce){.todo.pop > span::after,.todo.pop > span,.todo.pop input{animation:none}}
 .add{display:flex;gap:8px;margin-top:10px;align-items:center}
 .add input{flex:1}
 .water{display:flex;flex-wrap:wrap;gap:6px}
@@ -513,6 +523,53 @@ button.blk:hover{filter:brightness(.97)}
   .mdh{text-align:center;padding:6px 0}
   .mhead b{min-width:0;font-size:1rem}
 }
+/* ---- v11: Streaks & Routinen ---- */
+.streak{margin-left:auto;display:inline-flex;align-items:center;gap:3px;font-size:.82rem;font-weight:600;color:var(--k-arbeit);font-variant-numeric:tabular-nums}
+.streak i svg,.sv i svg{width:14px;height:14px;display:block}
+.streak.pending{color:var(--faint)}
+.todo.pop .streak{animation:pop .45s cubic-bezier(.3,1.6,.5,1) both}
+.rl{margin-left:auto;font-size:.75rem;color:var(--faint);white-space:nowrap}
+.todo > span + .rl + button,.todo > .rl + button{margin-left:6px}
+.repbtn{border:1px solid var(--line);border-radius:10px;padding:8px 10px;font-size:.82rem;color:var(--muted);white-space:nowrap}
+.repbtn.on{color:var(--ink);border-color:var(--ink)}
+.streaks{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+.streaks li{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr) 44px 28px;gap:10px;align-items:center}
+.sn{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sbar{height:6px;border-radius:3px;background:var(--soft);overflow:hidden}
+.sbar i{display:block;height:100%;background:var(--k-arbeit);border-radius:3px}
+.sv{display:inline-flex;align-items:center;gap:3px;justify-content:flex-end;font-variant-numeric:tabular-nums}
+.sv.hot{color:var(--k-arbeit)}
+.sb{text-align:right;font-variant-numeric:tabular-nums}
+/* ---- v12: Push ---- */
+.npv{border-radius:22px;padding:18px 14px 16px;margin-bottom:14px;background:linear-gradient(160deg,#9fb2bf 0%,#c3b4a3 55%,#a8a29a 100%);position:relative;overflow:hidden}
+.npv::after{content:"";position:absolute;inset:0;background:radial-gradient(120% 80% at 20% 0%,rgba(255,255,255,.35),transparent 60%);pointer-events:none}
+.npv-time{text-align:center;color:rgba(255,255,255,.95);margin-bottom:14px;position:relative;z-index:1}
+.npv-time b{display:block;font-size:2.6rem;font-weight:600;letter-spacing:-.02em;line-height:1}
+.npv-time span{font-size:.85rem;font-weight:500}
+.npv-card{position:relative;z-index:1;display:flex;gap:10px;align-items:flex-start;padding:11px 13px;border-radius:18px;background:rgba(245,245,245,.78);-webkit-backdrop-filter:blur(18px) saturate(1.4);backdrop-filter:blur(18px) saturate(1.4);color:#111;box-shadow:0 4px 18px rgba(0,0,0,.08);animation:npvIn .5s cubic-bezier(.2,.9,.3,1.2) both}
+.npv-card img{width:36px;height:36px;border-radius:9px;flex:none;background:#fff}
+.npv-txt{min-width:0;flex:1}
+.npv-top{display:flex;justify-content:space-between;font-size:.72rem;color:#555;margin-bottom:1px}
+.npv-top b{font-weight:600;letter-spacing:.02em}
+.npv-t{font-weight:600;font-size:.92rem;line-height:1.25}
+.npv-b{font-size:.88rem;line-height:1.3;color:#222}
+@keyframes npvIn{from{opacity:0;transform:translateY(-10px) scale(.97)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.npv-card{animation:none}}
+.pstate{font-size:.78rem;font-weight:600;padding:3px 9px;border-radius:999px;background:var(--soft);color:var(--muted)}
+.pstate.s-on{background:color-mix(in srgb,var(--k-sport) 18%,var(--bg));color:var(--k-sport)}
+.prow-list{list-style:none;margin:16px 0 0;padding:0}
+.prow-list li{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--line)}
+.prow-list li:last-child{border-bottom:0}
+.prow-list li.cur .plbl{font-weight:600}
+.plbl{flex:1;text-align:left;font-size:.95rem;color:var(--ink)}
+.vorl{width:auto;padding:5px 8px;font-size:.82rem}
+.ios{position:relative;width:46px;height:28px;flex:none;cursor:pointer}
+.ios input{position:absolute;opacity:0;inset:0;margin:0;cursor:pointer}
+.ios i{position:absolute;inset:0;border-radius:999px;background:var(--line);transition:background .2s}
+.ios i::after{content:"";position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.25);transition:transform .2s cubic-bezier(.3,.7,.3,1.2)}
+.ios input:checked + i{background:var(--k-sport)}
+.ios input:checked + i::after{transform:translateX(18px)}
+.ios input:focus-visible + i{outline:2px solid var(--accent);outline-offset:2px}
 </style>
 </head>
 <body>
@@ -576,7 +633,7 @@ const todayIso=()=>isoOf(new Date());
 const defaultSettings=()=>({
   waterGoal:3, waterLiter:true, theme:"system",
   habits:[{id:"h1",name:"Sport"},{id:"h2",name:"30 min lernen"},{id:"h3",name:"Vor 23 Uhr ins Bett"}],
-  stundenplan:[], pruefungen:[], wiederkehrend:[], lernplan:[], ferien:[], abRef:"2026-09-28"
+  stundenplan:[], pruefungen:[], wiederkehrend:[], lernplan:[], ferien:[], abRef:"2026-09-28", todoRules:[], push:{termine:true,vorlauf:15,wasser:true,pruefung:true,morgen:true,gewohnheiten:true,schule:false}
 });
 const S={
   db:null, uid:null, persist:false, mcp:null,
@@ -594,6 +651,8 @@ function normSettings(d){
   s.wiederkehrend=Array.isArray(s.wiederkehrend)?s.wiederkehrend:[];
   s.lernplan=Array.isArray(s.lernplan)?s.lernplan:[];
   s.ferien=Array.isArray(s.ferien)?s.ferien:[];
+  s.todoRules=Array.isArray(s.todoRules)?s.todoRules:[];
+  s.push=Object.assign({termine:true,vorlauf:15,wasser:true,pruefung:true,morgen:true,gewohnheiten:true,schule:false},s.push&&typeof s.push==="object"?s.push:{});
   if(typeof s.abRef!=="string"||!/^\d{4}-\d{2}-\d{2}$/.test(s.abRef)) s.abRef="2026-09-28";
   if(!s.waterLiter){s.waterGoal=3;s.waterLiter=true}
   s.waterGoal=Math.max(1,Math.min(10,+s.waterGoal||3));
@@ -604,7 +663,7 @@ function normWeek(d){const w=d||{};w.days=w.days&&typeof w.days==="object"?w.day
 function day(iso,create){
   let d=S.week.days[iso];
   if(!d){d={todos:[],termine:[],water:0,habits:{}}; if(create) S.week.days[iso]=d;}
-  d.todos=d.todos||[];d.termine=d.termine||[];d.habits=d.habits||{};d.water=+d.water||0;d.sleep=d.sleep||{};
+  d.todos=d.todos||[];d.termine=d.termine||[];d.habits=d.habits||{};d.water=+d.water||0;d.sleep=d.sleep||{};d.rdone=d.rdone||{};
   return d;
 }
 
@@ -685,7 +744,7 @@ function ferienAm(iso){return S.settings.ferien.filter(f=>f.von&&iso>=f.von&&iso
 /* ---------- Abos ---------- */
 let weekUnsub=null, settingsUnsub=null;
 function subscribeSettings(){
-  subscribeEvents();
+  subscribeEvents(); subscribeHabits();
   settingsUnsub=settingsRef().onSnapshot(snap=>{
     if(settingsSaver.pending()) return;
     if(snap.exists) S.settings=normSettings(clone(snap.data()));
@@ -703,6 +762,7 @@ function loadWeek(){
       if(weekKeyOf(S.monday)!==key||saverFor(key).pending()) return;
       S.week=normWeek(snap.exists?clone(snap.data()):{});
       S.memWeeks[key]=clone(S.week);
+      mergeWeekIntoLog();
       render();
     },e=>{setSync("err",e)});
   }
@@ -1127,6 +1187,172 @@ function fab(){
   return h("button",{class:"fab","aria-label":"Termin hinzufügen",title:"Termin hinzufügen",onclick:()=>openEditor({date:S.tab==="start"?todayIso():S.selected})},"+");
 }
 
+/* Abhak-Animation */
+let flashT=null;
+document.addEventListener("change",e=>{
+  const el=e.target; if(!(el instanceof HTMLInputElement)||el.type!=="checkbox"||!el.checked) return;
+  const li=el.closest("li[data-k]"); if(!li) return;
+  S.flash=li.dataset.k; clearTimeout(flashT); flashT=setTimeout(()=>{S.flash=null},900);
+},true);
+function habitList(iso,dd){
+  return h("ul",{class:"todos habitlist"},S.settings.habits.map(hb=>{const on=!!dd.habits[hb.id],k="h"+iso+hb.id;
+    return h("li",{"data-k":k,class:`todo${on?" done":""}${S.flash===k?" pop":""}`},
+      h("input",{type:"checkbox",checked:on,"aria-label":hb.name,onchange:e=>{const c=e.target.checked;setHabitLog(hb.id,iso,c);mutateAnyDay(iso,x=>{x.habits[hb.id]=c})}}),
+      h("span",{text:hb.name}),streakBadge(hb.id))}));
+}
+
+
+/* ---------- Wiederkehrende To-dos ---------- */
+const RULE_REP=[["once","Einmal"],["daily","Täglich"],["weekdays","Mo–Fr"],["weekly","Wöchentlich"]];
+function rulesFor(iso){const wd=wdOf(iso);return (S.settings.todoRules||[]).filter(r=>iso>=(r.from||"0000")&&(r.repeat==="daily"||(r.repeat==="weekdays"&&wd<5)||(r.repeat==="weekly"&&+r.wd===wd)))}
+function todosFor(iso,dd){const rd=dd.rdone||{};return rulesFor(iso).map(r=>({id:"r"+r.id,rid:r.id,text:r.text,done:!!rd[r.id],rule:r})).concat(dd.todos)}
+const ruleLabel=r=>r.repeat==="daily"?"täglich":r.repeat==="weekdays"?"Mo–Fr":`jeden ${DAYS_LONG[+r.wd]}`;
+function todoSection(iso,dd,o){
+  const list=todosFor(iso,dd), open=list.filter(x=>!x.done).length;
+  const input=h("input",{type:"text",placeholder:o.placeholder,"data-keep":o.keep,"aria-label":"Neue Aufgabe"});
+  let rep="once";
+  const repBtn=h("button",{class:"repbtn",type:"button",title:"Wiederholen: tippen zum Wechseln"},"↻ Einmal");
+  repBtn.onclick=()=>{const i=RULE_REP.findIndex(r=>r[0]===rep);rep=RULE_REP[(i+1)%RULE_REP.length][0];repBtn.textContent="↻ "+RULE_REP.find(r=>r[0]===rep)[1];repBtn.classList.toggle("on",rep!=="once")};
+  const add=()=>{const v=input.value.trim();if(!v)return;input.value="";
+    if(rep==="once") mutateAnyDay(iso,x=>{x.todos.push({id:uid(),text:v,done:false})});
+    else{(S.settings.todoRules=S.settings.todoRules||[]).push({id:uid(),text:v,repeat:rep,wd:wdOf(iso),from:iso});saveSettings()}};
+  input.addEventListener("keydown",e=>{if(e.key==="Enter")add()});
+  const rows=list.map(x=>h("li",{"data-k":"t"+x.id,class:`todo${x.done?" done":""}${S.flash==="t"+x.id?" pop":""}`},
+    h("input",{type:"checkbox",checked:x.done,"aria-label":x.text,onchange:e=>{const c=e.target.checked;
+      if(x.rule) mutateAnyDay(iso,y=>{y.rdone=Object.assign({},y.rdone,{[x.rid]:c})});
+      else mutateAnyDay(iso,y=>{const z=y.todos.find(q=>q.id===x.id);if(z)z.done=c})}}),
+    h("span",{text:x.text}),
+    x.rule?h("small",{class:"rl",text:"↻ "+ruleLabel(x.rule)}):null,
+    o.full&&!x.done&&!x.rule?h("button",{class:"link small",title:"Auf morgen verschieben",onclick:()=>moveTodo(iso,x)},"Morgen"):null,
+    o.full?h("button",{class:"x","aria-label":x.rule?`${x.text} nicht mehr wiederholen`:`${x.text} löschen`,onclick:()=>{
+      if(x.rule){if(confirm(`„${x.text}“ nicht mehr wiederholen?`)){S.settings.todoRules=S.settings.todoRules.filter(r=>r.id!==x.rid);saveSettings()}}
+      else mutateDay(iso,y=>{y.todos=y.todos.filter(z=>z.id!==x.id)})}},"×"):null));
+  return h("section",{class:"block"},h("div",{class:"bh"},h("h3",{text:o.title}),h("span",{class:"muted",text:list.length?`${open} offen`:""})),
+    list.length?h("ul",{class:"todos"},rows):h("p",{class:"empty",text:"Nichts offen."}),
+    h("div",{class:"add"},input,repBtn,h("button",{class:"btn",onclick:add},"+")));
+}
+
+/* ---------- Streaks ---------- */
+S.hlog={}; let hlogLoaded=false, habitsUnsub=null;
+const habitsSaver=new Saver();
+const habitsRef=()=>S.db.doc(`data/users/${S.uid}/habits`);
+function subscribeHabits(){
+  if(habitsUnsub) return;
+  habitsUnsub=habitsRef().onSnapshot(snap=>{
+    if(habitsSaver.pending()) return;
+    const d=snap.exists?clone(snap.data()):{};
+    S.hlog=d.log&&typeof d.log==="object"?d.log:{};
+    if(!snap.metadata.fromCache){hlogLoaded=true;mergeWeekIntoLog()}
+    render();
+  },e=>{setSync("err",e)});
+}
+function saveHabits(){if(S.persist){const data={log:clone(S.hlog)};habitsSaver.schedule(()=>habitsRef().set(data))}}
+function setHabitLog(hid,iso,on){const m=S.hlog[hid]=S.hlog[hid]||{};if(on)m[iso]=1;else delete m[iso];saveHabits()}
+function mergeWeekIntoLog(){
+  if(S.persist&&!hlogLoaded) return;
+  let ch=false;
+  for(const [iso,d] of Object.entries(S.week.days||{})) for(const [hid,on] of Object.entries(d.habits||{}))
+    if(on&&!(S.hlog[hid]&&S.hlog[hid][iso])){(S.hlog[hid]=S.hlog[hid]||{})[iso]=1;ch=true}
+  if(ch) saveHabits();
+}
+function streakOf(hid){const m=S.hlog[hid]||{};let d=parseIso(todayIso());const today=!!m[isoOf(d)];if(!today)d=addDays(d,-1);let n=0;while(m[isoOf(d)]){n++;d=addDays(d,-1)}return {n,today}}
+function bestOf(hid){const ds=Object.keys(S.hlog[hid]||{}).sort();let best=0,run=0,prev=null;for(const iso of ds){run=(prev&&isoOf(addDays(parseIso(prev),1))===iso)?run+1:1;best=Math.max(best,run);prev=iso}return best}
+const FLAME='<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8.6 1.2c.3 2-1 3.1-2 4.3C5.5 6.8 4.5 8 4.5 9.9A3.6 3.6 0 0 0 8 13.6a3.6 3.6 0 0 0 3.6-3.7c0-1.3-.5-2.3-1.1-3.1-.1 1-.6 1.7-1.3 2 .4-2.3-.1-4.8-1.6-7.6z" fill="currentColor"/></svg>';
+function streakBadge(hid){
+  const s=streakOf(hid); if(s.n<2) return null;
+  const b=h("b",{class:`streak${s.today?"":" pending"}`,title:`${s.n} Tage am Stück${s.today?"":", heute noch offen"}. Rekord: ${bestOf(hid)} Tage`});
+  const ic=h("i");ic.innerHTML=FLAME; b.append(ic,String(s.n)); return b;
+}
+function streakSection(){
+  const hs=S.settings.habits; if(!hs.length) return null;
+  return h("section",{class:"block"},h("div",{class:"bh"},h("h3",{text:"Streaks"}),h("span",{class:"muted",text:"aktuell / Rekord"})),
+    h("ul",{class:"streaks"},hs.map(hb=>{const s=streakOf(hb.id),best=bestOf(hb.id);
+      return h("li",{},h("span",{class:"sn",text:hb.name}),
+        h("span",{class:"sbar"},h("i",{style:`width:${best?Math.round(s.n/best*100):0}%`})),
+        h("b",{class:`sv${s.n>=2?" hot":""}`},s.n>=2?(()=>{const i=h("i");i.innerHTML=FLAME;return i})():null,String(s.n)),
+        h("span",{class:"muted sb",text:String(best)}))})));
+}
+
+
+/* ---------- Push-Benachrichtigungen ---------- */
+const PUSH_TYPES=[
+ ["termine","Termine","📅 Zahnarzt in 15 Min.","16:00 bis 16:30 Uhr, Praxis Dr. Weber"],
+ ["morgen","Guten Morgen um 7 Uhr","☀️ Guten Morgen","Heute: Schule 07:45–15:25, Training 18:00. 2 To-dos offen."],
+ ["wasser","Wasser","💧 1 von 3 Litern","Zeit für die nächste Flasche."],
+ ["gewohnheiten","Streak-Warnung um 20:30","🔥 Sport: 6 Tage am Stück","Heute noch offen. Lass die Serie nicht reißen."],
+ ["pruefung","Prüfungen","📝 Morgen: Netzwerktechnik","Um 08:00 Uhr. Früh schlafen, du schaffst das."],
+ ["schule","Schulbeginn","🎓 Schule um 07:45","BFK (Hmd) in G303. Heute bis 15:25."]];
+S.pushPrev="termine"; S.pushState=null; S.pushMsg="";
+const isIOS=/iPhone|iPad|iPod/.test(navigator.userAgent);
+const isStandalone=()=>matchMedia("(display-mode: standalone)").matches||navigator.standalone===true;
+async function refreshPushState(){
+  let st="off";
+  try{
+    if(!("serviceWorker" in navigator)||!("PushManager" in window)||!("Notification" in window)) st="unsupported";
+    else if(Notification.permission==="denied") st="denied";
+    else{const reg=await navigator.serviceWorker.getRegistration();const sub=reg&&await reg.pushManager.getSubscription();st=sub?"on":"off"}
+  }catch(_){st="unsupported"}
+  if(st!==S.pushState){S.pushState=st;render()}
+}
+const b64u=s=>{const p="=".repeat((4-s.length%4)%4);const r=atob((s+p).replace(/-/g,"+").replace(/_/g,"/"));return Uint8Array.from([...r].map(c=>c.charCodeAt(0)))};
+async function enablePush(){
+  S.pushMsg="Wird eingerichtet …";render();
+  try{
+    const perm=await Notification.requestPermission();
+    if(perm!=="granted"){S.pushMsg=perm==="denied"?"Du hast Mitteilungen abgelehnt. Erlauben kannst du sie in den Einstellungen deines Geräts.":"Keine Erlaubnis erteilt.";S.pushState=null;refreshPushState();return}
+    const {data,error}=await S.sb.functions.invoke("push-tick",{body:{action:"pubkey"}});
+    if(error||!data||!data.key) throw error||new Error("Kein Schlüssel");
+    const reg=await navigator.serviceWorker.ready;
+    let sub=await reg.pushManager.getSubscription();
+    if(!sub) sub=await reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:b64u(data.key)});
+    const j=sub.toJSON();
+    const r=await S.sb.from("push_subs").upsert({endpoint:j.endpoint,user_id:S.uid,p256dh:j.keys.p256dh,auth:j.keys.auth,ua:navigator.userAgent.slice(0,140)},{onConflict:"endpoint"});
+    if(r.error) throw r.error;
+    S.pushMsg="Aktiv. Tipp auf „Test senden“, um es auszuprobieren.";
+  }catch(e){S.pushMsg="Hat nicht geklappt: "+(e&&e.message||e)}
+  S.pushState=null; refreshPushState(); render();
+}
+async function disablePush(){
+  try{const reg=await navigator.serviceWorker.getRegistration();const sub=reg&&await reg.pushManager.getSubscription();
+    if(sub){await S.sb.from("push_subs").delete().eq("endpoint",sub.endpoint);await sub.unsubscribe()}
+    S.pushMsg="Auf diesem Gerät ausgeschaltet.";}catch(e){S.pushMsg="Fehler: "+(e&&e.message||e)}
+  S.pushState=null; refreshPushState();
+}
+async function testPush(){
+  S.pushMsg="Sende …";render();
+  try{const {data,error}=await S.sb.functions.invoke("push-tick",{body:{action:"test"}});if(error)throw error;
+    S.pushMsg=data&&data.sent?`Gesendet an ${data.sent} ${data.sent===1?"Gerät":"Geräte"}. Sollte gleich oben erscheinen.`:"Kein Gerät angemeldet. Erst „Aktivieren“ tippen.";}
+  catch(e){S.pushMsg="Test fehlgeschlagen: "+(e&&e.message||e)}
+  render();
+}
+function pushSection(){
+  if(S.pushState===null) setTimeout(refreshPushState,0);
+  const P=S.settings.push, prev=PUSH_TYPES.find(t=>t[0]===S.pushPrev)||PUSH_TYPES[0];
+  const setP=(k,v)=>{P[k]=v;saveSettings()};
+  const preview=h("div",{class:"npv","aria-hidden":"true"},
+    h("div",{class:"npv-time"},h("b",{text:hhmm(new Date())}),h("span",{text:`${DAYS_LONG[wdOf(todayIso())]}, ${fmtDay(new Date())}`})),
+    h("div",{class:"npv-card"},h("img",{src:"icon-192.png",alt:""}),
+      h("div",{class:"npv-txt"},h("div",{class:"npv-top"},h("b",{text:"PLANER"}),h("span",{text:"jetzt"})),h("div",{class:"npv-t",text:prev[2]}),h("div",{class:"npv-b",text:prev[3]}))));
+  const rows=h("ul",{class:"prow-list"},PUSH_TYPES.map(([k,label])=>h("li",{class:S.pushPrev===k?"cur":""},
+    h("button",{class:"plbl",type:"button",onclick:()=>{S.pushPrev=k;render()}},label),
+    k==="termine"&&P.termine?h("select",{class:"vorl","aria-label":"Wie früh",onchange:e=>setP("vorlauf",+e.target.value)},[5,10,15,30,60].map(v=>h("option",{value:v,selected:+P.vorlauf===v},`${v} Min. vorher`))):null,
+    h("label",{class:"ios"},h("input",{type:"checkbox",checked:!!P[k],"aria-label":label,onchange:e=>{S.pushPrev=k;setP(k,e.target.checked)}}),h("i")))));
+  const st=S.pushState;
+  let status, actions=[];
+  if(st==="unsupported") status=isIOS&&!isStandalone()?"Auf dem iPhone gehen Mitteilungen nur, wenn der Planer über „Zum Home-Bildschirm“ installiert ist und du ihn über das Icon öffnest (ab iOS 16.4).":"Dieser Browser unterstützt keine Push-Mitteilungen.";
+  else if(st==="denied") status="Mitteilungen sind für den Planer blockiert. Erlauben: iPhone-Einstellungen → Mitteilungen → Planer. Am Mac: Systemeinstellungen → Mitteilungen.";
+  else if(st==="on"){status="Auf diesem Gerät aktiv.";actions=[h("button",{class:"btn primary",onclick:testPush},"Test senden"),h("button",{class:"btn",onclick:disablePush},"Ausschalten")]}
+  else if(st==="off"){status="Auf diesem Gerät noch aus.";actions=[h("button",{class:"btn primary",onclick:enablePush},"Mitteilungen aktivieren")]}
+  else status="Prüfe …";
+  return h("section",{class:"block pushsec"},h("div",{class:"bh"},h("h3",{text:"Benachrichtigungen"}),h("span",{class:`pstate s-${st||"x"}`,text:st==="on"?"Aktiv":st==="off"?"Aus":""})),
+    preview,
+    h("p",{class:"note",text:status}),
+    actions.length?h("div",{class:"add"},actions):null,
+    S.pushMsg?h("p",{class:"note",text:S.pushMsg}):null,
+    rows,
+    h("p",{class:"note",text:"Tipp auf einen Eintrag, um oben die Vorschau zu sehen. Die Einstellungen gelten für alle deine Geräte."}));
+}
+
 /* Start */
 function nextUp(){
   const iso=todayIso(), items=itemsFor(iso), now=hhmm(new Date());
@@ -1149,7 +1375,7 @@ function viewStart(m){
   const fact=(label,main,sub,go)=>h("button",{class:"fact",onclick:go},h("span",{class:"muted",text:label}),h("b",{text:main}),h("small",{class:"muted",text:sub}));
   const nu=nextUp();
   facts.append(fact(nu&&nu.cur?"Jetzt":"Als Nächstes",nu?nu.it.title:"Heute nichts mehr",nu?`${nu.it.start}${nu.it.end?"–"+nu.it.end:""} Uhr, ${nu.when}`:"Genieß den Abend",()=>{S.selected=t;S.monday=mondayOf(td);S.tab="tag";loadWeek()}));
-  const todayItems=itemsFor(t).filter(x=>x.kind!=="ferien"), open=dd?dd.todos.filter(x=>!x.done).length:0;
+  const todayItems=itemsFor(t).filter(x=>x.kind!=="ferien"), open=dd?todosFor(t,dd).filter(x=>!x.done).length:0;
   facts.append(fact("Heute",`${todayItems.length} ${todayItems.length===1?"Termin":"Termine"}`,dd?`${open} To-dos offen, ${Math.min(dd.water,S.settings.waterGoal)}/${S.settings.waterGoal} l Wasser`:"",()=>{S.selected=t;S.monday=mondayOf(td);S.tab="tag";loadWeek()}));
   const ex=nextExam();
   facts.append(fact("Nächste Prüfung",ex?(ex.fach||"Prüfung"):"Keine eingetragen",ex?`${fmtDay(parseIso(ex.date))}, ${inText(daysUntil(ex.date))}`:"Unter Schule eintragen",()=>{S.tab="schule";S.schoolTab="pruefungen";render()}));
@@ -1171,21 +1397,15 @@ function viewStart(m){
   // Unten: heute + Woche
   const row=h("div",{class:"tri"});
   if(dd){
-    const input=h("input",{type:"text",placeholder:"Neue Aufgabe für heute","data-keep":"st-todo","aria-label":"Neue Aufgabe"});
-    const add=()=>{const v=input.value.trim();if(!v)return;input.value="";mutateDay(t,x=>{x.todos.push({id:uid(),text:v,done:false})})};
-    input.addEventListener("keydown",e=>{if(e.key==="Enter")add()});
-    row.append(h("section",{class:"block"},h("div",{class:"bh"},h("h3",{text:"Heute zu tun"}),h("span",{class:"muted",text:dd.todos.length?`${open} offen`:""})),
-      dd.todos.length?h("ul",{class:"todos"},dd.todos.map(x=>h("li",{class:`todo${x.done?" done":""}`},
-        h("input",{type:"checkbox",checked:x.done,"aria-label":x.text,onchange:e=>mutateDay(t,y=>{const z=y.todos.find(q=>q.id===x.id);if(z)z.done=e.target.checked})}),h("span",{text:x.text})))):h("p",{class:"empty",text:"Nichts offen."}),
-      h("div",{class:"add"},input)));
+    row.append(todoSection(t,dd,{title:"Heute zu tun",placeholder:"Neue Aufgabe für heute",keep:"st-todo"}));
     const sl=sleepMins(dd.sleep);
     row.append(h("section",{class:"block"},
       h("div",{class:"bh"},h("h3",{text:"Gewohnheiten"}),h("span",{class:"muted",text:`${S.settings.habits.filter(x=>dd.habits[x.id]).length} / ${S.settings.habits.length}`})),
-      h("div",{class:"habits"},S.settings.habits.map(hb=>h("button",{class:"habit","aria-pressed":String(!!dd.habits[hb.id]),onclick:()=>mutateDay(t,x=>{x.habits[hb.id]=!x.habits[hb.id]})},hb.name)))));
+      habitList(t,dd)));
   }
   const key=weekKeyOf(S.monday), focus=S.settings.lernplan.filter(x=>x.woche===key);
   const wk=h("section",{class:"block"},h("div",{class:"bh"},h("h3",{text:"Diese Woche"}),h("button",{class:"link",onclick:()=>{S.tab="woche";S.calView="woche";render()}},"Ziele bearbeiten")));
-  if(S.week.goals.length) wk.append(h("ul",{class:"todos"},S.week.goals.map(g=>h("li",{class:`todo${g.done?" done":""}`},
+  if(S.week.goals.length) wk.append(h("ul",{class:"todos"},S.week.goals.map(g=>h("li",{"data-k":"t"+g.id,class:`todo${g.done?" done":""}${S.flash==="t"+g.id?" pop":""}`},
     h("input",{type:"checkbox",checked:g.done,"aria-label":g.text,onchange:e=>{g.done=e.target.checked;saveWeek()}}),h("span",{text:g.text})))));
   else wk.append(h("p",{class:"empty",text:"Noch keine Wochenziele."}));
   if(focus.length) wk.append(h("div",{class:"mini-h muted",text:"Lernen"}),h("ul",{class:"topics"},focus.map(x=>h("li",{class:"topic small"},h("i",{class:`sdot s-${x.status||"offen"}`}),h("span",{text:x.thema})))));
@@ -1254,28 +1474,18 @@ function viewTag(m){
   const sleepSec=sleepSection(iso,dd);
   if(S.week.goals.length){
     side.append(h("section",{class:"block"},h("div",{class:"bh"},h("h3",{text:"Ziele dieser Woche"}),h("button",{class:"link",onclick:()=>{S.tab="woche";S.calView="woche";render()}},"Bearbeiten")),
-      h("ul",{class:"todos"},S.week.goals.map(g=>h("li",{class:`todo${g.done?" done":""}`},
+      h("ul",{class:"todos"},S.week.goals.map(g=>h("li",{"data-k":"t"+g.id,class:`todo${g.done?" done":""}${S.flash==="t"+g.id?" pop":""}`},
         h("input",{type:"checkbox",checked:g.done,"aria-label":g.text,onchange:e=>{g.done=e.target.checked;saveWeek()}}),h("span",{text:g.text}))))));
   }
   // To-dos
-  const open=dd.todos.filter(t=>!t.done).length;
-  const input=h("input",{type:"text",placeholder:"Neue Aufgabe","data-keep":"todo-"+iso,"aria-label":"Neue Aufgabe"});
-  const addTodo=()=>{const v=input.value.trim();if(!v)return;input.value="";mutateDay(iso,x=>{x.todos.push({id:uid(),text:v,done:false})})};
-  input.addEventListener("keydown",e=>{if(e.key==="Enter")addTodo()});
-  side.append(h("section",{class:"block"},h("div",{class:"bh"},h("h3",{text:"To-dos"}),h("span",{class:"muted",text:dd.todos.length?`${open} offen`:""})),
-    dd.todos.length?h("ul",{class:"todos"},dd.todos.map(t=>h("li",{class:`todo${t.done?" done":""}`},
-      h("input",{type:"checkbox",checked:t.done,"aria-label":t.text,onchange:e=>mutateDay(iso,x=>{const y=x.todos.find(z=>z.id===t.id);if(y)y.done=e.target.checked})}),
-      h("span",{text:t.text}),
-      !t.done?h("button",{class:"link small",title:"Auf morgen verschieben",onclick:()=>moveTodo(iso,t)},"Morgen"):null,
-      h("button",{class:"x","aria-label":`${t.text} löschen`,onclick:()=>mutateDay(iso,x=>{x.todos=x.todos.filter(z=>z.id!==t.id)})},"×")))):null,
-    h("div",{class:"add"},input,h("button",{class:"btn",onclick:addTodo},"Hinzufügen"))));
+  side.append(todoSection(iso,dd,{title:"To-dos",placeholder:"Neue Aufgabe","keep":"todo-"+iso,full:true}));
 
   // Wasser
   side.append(h("section",{class:"block"},h("div",{class:"bh"},h("h3",{text:"Wasser"}),h("span",{class:"muted",text:waterText(dd)})),waterRow(iso,dd)));
 
   // Gewohnheiten
   side.append(h("section",{class:"block"},h("div",{class:"bh"},h("h3",{text:"Gewohnheiten"}),h("span",{class:"muted",text:`${S.settings.habits.filter(x=>dd.habits[x.id]).length} / ${S.settings.habits.length}`})),
-    S.settings.habits.length?h("div",{class:"habits"},S.settings.habits.map(hb=>h("button",{class:"habit","aria-pressed":String(!!dd.habits[hb.id]),onclick:()=>mutateDay(iso,x=>{x.habits[hb.id]=!x.habits[hb.id]})},hb.name)))
+    S.settings.habits.length?habitList(iso,dd)
       :h("p",{class:"empty"},"Noch keine. ",h("button",{class:"link",onclick:()=>{S.tab="einstellungen";render()}},"In den Einstellungen anlegen"))));
   side.append(sleepSec);
   cols.append(side);
@@ -1299,7 +1509,7 @@ function viewWoche(m,embedded){
   gin.addEventListener("keydown",e=>{if(e.key==="Enter")addG()});
   const gd=S.week.goals.filter(x=>x.done).length;
   const goals=h("section",{class:"block goals"},h("div",{class:"bh"},h("h3",{text:"Ziele dieser Woche"}),h("span",{class:"muted",text:S.week.goals.length?`${gd} / ${S.week.goals.length} erreicht`:""})),
-    S.week.goals.length?h("ul",{class:"todos"},S.week.goals.map(g=>h("li",{class:`todo${g.done?" done":""}`},
+    S.week.goals.length?h("ul",{class:"todos"},S.week.goals.map(g=>h("li",{"data-k":"t"+g.id,class:`todo${g.done?" done":""}${S.flash==="t"+g.id?" pop":""}`},
       h("input",{type:"checkbox",checked:g.done,"aria-label":g.text,onchange:e=>{g.done=e.target.checked;saveWeek()}}),h("span",{text:g.text}),
       h("button",{class:"x","aria-label":`${g.text} löschen`,onclick:()=>{S.week.goals=S.week.goals.filter(x=>x.id!==g.id);saveWeek()}},"×")))):h("p",{class:"empty",text:"Setz dir 2 bis 4 Ziele, die du bis Sonntag schaffen willst."}),
     h("div",{class:"add"},gin,h("button",{class:"btn",onclick:addG},"Hinzufügen")));
@@ -1469,9 +1679,10 @@ function viewFortschritt(m){
   m.append(h("section",{class:"block"},h("div",{class:"bh"},h("h3",{text:"Wasser pro Tag in Litern"})),
     h("div",{class:"bars"},days.map(([iso,dd],i)=>h("div",{class:"barcol"},h("div",{class:"bartrack"},h("i",{style:`height:${Math.min(100,dd.water/goal*100)}%`})),h("small",{text:DAYS[i]}))))));
   // Gewohnheiten-Matrix
+  const sk=streakSection(); if(sk) m.append(sk);
   if(S.settings.habits.length){
     const tbl=h("table",{class:"matrix"},h("thead",{},h("tr",{},h("th",{}),DAYS.map(d=>h("th",{text:d})))),
-      h("tbody",{},S.settings.habits.map(hb=>h("tr",{},h("th",{scope:"row",text:hb.name}),days.map(([iso,dd])=>h("td",{},h("button",{class:`cell${dd.habits[hb.id]?" on":""}`,"aria-label":`${hb.name} am ${iso}`,"aria-pressed":String(!!dd.habits[hb.id]),onclick:()=>mutateDay(iso,x=>{x.habits[hb.id]=!x.habits[hb.id]})})))))));
+      h("tbody",{},S.settings.habits.map(hb=>h("tr",{},h("th",{scope:"row",text:hb.name}),days.map(([iso,dd])=>h("td",{},h("button",{class:`cell${dd.habits[hb.id]?" on":""}`,"aria-label":`${hb.name} am ${iso}`,"aria-pressed":String(!!dd.habits[hb.id]),onclick:()=>{const c=!dd.habits[hb.id];setHabitLog(hb.id,iso,c);mutateDay(iso,x=>{x.habits[hb.id]=c})}})))))));
     m.append(h("section",{class:"block"},h("div",{class:"bh"},h("h3",{text:"Gewohnheiten"})),h("div",{class:"scroll"},tbl)));
   }
 }
@@ -1505,6 +1716,13 @@ function viewSettings(m){
       h("div",{class:"body"},h("div",{class:"t",text:r.title}),h("div",{class:"m"},kindDot(r.kind||"termin"),`${(r.wds||[]).map(i=>DAYS[i]).join(", ")}, ${KINDS[r.kind]||"Termin"}`)),
       h("button",{class:"x","aria-label":`Serie ${r.title} löschen`,onclick:()=>{if(confirm(`„${r.title}“ aus allen Wochen löschen?`))upd(()=>{st.wiederkehrend=st.wiederkehrend.filter(x=>x.id!==r.id)})}},"×"))))
       :h("p",{class:"empty",text:"Noch keine. Beim Anlegen eines Termins „Jede Woche wiederholen“ anhaken."})));
+
+  const TR=st.todoRules;
+  m.append(h("section",{class:"block"},h("div",{class:"bh"},h("h3",{text:"Wiederkehrende Aufgaben"})),
+    TR.length?h("ul",{class:"todos"},TR.map(r=>h("li",{class:"todo"},h("span",{text:r.text}),h("small",{class:"rl",text:"↻ "+ruleLabel(r)}),
+      h("button",{class:"x","aria-label":`${r.text} löschen`,onclick:()=>{st.todoRules=st.todoRules.filter(x=>x.id!==r.id);saveSettings()}},"×")))):
+      h("p",{class:"empty",text:"Noch keine. Beim Hinzufügen einer Aufgabe auf „↻ Einmal“ tippen, bis Täglich, Mo–Fr oder Wöchentlich dasteht."})));
+  if(typeof pushSection==="function") m.append(pushSection());
 
   m.append(h("section",{class:"block"},h("div",{class:"bh"},h("h3",{text:"Wasserziel"})),
     h("div",{class:"add"},h("input",{type:"number",min:"1",max:"10",value:st.waterGoal,class:"num","aria-label":"Liter pro Tag",onchange:e=>upd(()=>{st.waterGoal=Math.max(1,Math.min(10,+e.target.value||3))})}),
