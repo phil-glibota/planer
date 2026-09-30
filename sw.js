@@ -1,5 +1,5 @@
 // Offline-Cache für den Wochenplaner. Bei Änderungen die Versionsnummer erhöhen.
-const CACHE = "planer-v1";
+const CACHE = "planer-v2";
 const SHELL = ["./", "./index.html", "./config.js", "./manifest.webmanifest", "./icon-192.png", "./icon-512.png", "./apple-touch-icon.png"];
 
 self.addEventListener("install", e => {
